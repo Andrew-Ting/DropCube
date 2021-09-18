@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class BlockController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private Rigidbody rb;
+    private bool useGravity = true;
+
+    void Awake()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void Drop()
+    {
+        if (transform.gameObject)
+        {
+            rb.constraints &= ~RigidbodyConstraints.FreezePositionY;
+            rb.useGravity = true;
+        }
     }
 }
