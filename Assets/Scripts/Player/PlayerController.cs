@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private CharacterController controller;
-    private Vector3 forward, right;
     private float gravity;
     private float moveSpeed;
 
@@ -14,22 +13,13 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         gravity = 0.0f;
-        moveSpeed = 20f;
-        forward = Camera.main.transform.forward;
-        forward.y = 0;
-        forward = Vector3.Normalize(forward);
-
-        right = Quaternion.Euler(new Vector3(0, 90, 0)) * forward;
+        moveSpeed = 1f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.anyKey)
-        {
-            Move();
-        }
-
+        Move();
         ApplyGravity();
     }
 
@@ -48,13 +38,36 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        Vector3 rightMovement = right * Input.GetAxis("HorizontalKey");
-        Vector3 upMovement = forward * Input.GetAxis("VerticalKey");
+        Vector3 movement = Vector3.zero;
 
-        Vector3 movement = rightMovement + upMovement;
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            movement = Vector3.right * -1;
+            
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            movement = Vector3.forward * -1;
+        }
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            movement = Vector3.right;
+        }
+        else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            movement = Vector3.forward;
+        }
+        else
+        {
+            return;
+        }
 
-        movement.Normalize();
+        transform.rotation = Quaternion.LookRotation(movement) * Quaternion.Euler(0, 90, 0);
+        Vector3 startPos = transform.position;
 
-        controller.Move(movement * moveSpeed * Time.deltaTime);
+        while (Vector3.Distance(startPos, transform.position) < 1)
+        {
+            controller.Move(movement * moveSpeed * Time.deltaTime);
+        }
     }
 }

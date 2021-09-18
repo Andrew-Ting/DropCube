@@ -10,9 +10,7 @@ public class FloorController : MonoBehaviour
     private int floorSize;
 
     private List<GameObject> blocks;
-
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         blocks = new List<GameObject>();
         SetupBlocks();
