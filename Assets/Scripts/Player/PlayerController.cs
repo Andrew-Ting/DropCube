@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private CharacterController controller;
+    private Animator anim;
     private float gravity;
     private bool coroutineStarted;
 
@@ -12,6 +13,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        anim = GetComponentInChildren<Animator>();
         gravity = 0.0f;
         coroutineStarted = false;
     }
@@ -79,6 +81,10 @@ public class PlayerController : MonoBehaviour
         {
             coroutineStarted = true;
             transform.rotation = Quaternion.LookRotation(movement);
+            if (anim.gameObject.activeSelf)
+            {
+                anim.SetTrigger("StepTrigger");
+            }
             StartCoroutine(MovePlayer(transform.position, newPosition, 0.5f));
         }
     }
