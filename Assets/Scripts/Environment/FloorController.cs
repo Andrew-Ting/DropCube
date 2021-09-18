@@ -10,18 +10,18 @@ public class FloorController : MonoBehaviour
     private int floorSize;
 
     private List<GameObject> blocks;
-    private List<GameObject> fallenBlocks;
+    private List<Vector3> fallenBlocks;
     private float secondsBetweenDrop;
     private bool continueCoroutine;
 
     void Awake()
     {
         blocks = new List<GameObject>();
-        fallenBlocks = new List<GameObject>();
+        fallenBlocks = new List<Vector3>();
         secondsBetweenDrop = 1f;
         continueCoroutine = true;
         SetupBlocks();
-        StartCoroutine(DropBlocks());
+        DropBlocksCoroutine();
     }
 
     private void SetupBlocks()
@@ -30,11 +30,14 @@ public class FloorController : MonoBehaviour
         {
             for (int j = -(floorSize - 1); j < floorSize; j++)
             {
-                GameObject block = Instantiate(blockPrefab, new Vector3(i, 0, j), Quaternion.identity);
-                block.transform.parent = this.transform;
-                blocks.Add(block);
+                CreateBlock(new Vector3(i, 0, j));
             }
         }
+    }
+
+    private void DropBlocksCoroutine()
+    {
+        StartCoroutine(DropBlocks());
     }
 
     private IEnumerator DropBlocks()
@@ -58,16 +61,37 @@ public class FloorController : MonoBehaviour
 
             blockToDrop.GetComponent<BlockController>().Drop();
 
-            if (!fallenBlocks.Contains(blockToDrop))
+            if (!fallenBlocks.Contains(blockToDrop.transform.position))
             {
-                fallenBlocks.Add(blockToDrop);
+                fallenBlocks.Add(blockToDrop.transform.position);
             }
 
             if (blocks.Contains(blockToDrop))
             {
                 blocks.Remove(blockToDrop);
             }
+
+            yield return new WaitForSeconds(4f);
+
+            if (blockToDrop)
+            {
+                Destroy(blockToDrop);
+            }
         }
-        
+    }
+
+    public void ResetFloor()
+    {
+        foreach (Vector3 position in fallenBlocks)
+        {
+            CreateBlock(position);
+        }
+    }
+
+    private void CreateBlock(Vector3 position)
+    {
+        GameObject block = Instantiate(blockPrefab, position, Quaternion.identity);
+        block.transform.parent = this.transform;
+        blocks.Add(block);
     }
 }

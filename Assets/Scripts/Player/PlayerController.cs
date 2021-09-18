@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyGravity()
     {
-        if (!controller.isGrounded)
+        if (!controller.isGrounded || !IsGrounded())
         {
             gravity -= 9.8f;
             controller.Move(new Vector3(0.0f, gravity, 0.0f));
@@ -34,6 +34,15 @@ public class PlayerController : MonoBehaviour
         {
             gravity = 0.0f;
         }
+    }
+
+    private bool IsGrounded()
+    {
+        RaycastHit hit;
+        float distance = 1f;
+        Vector3 dir = new Vector3(0, -1);
+
+        return Physics.Raycast(transform.position, dir, out hit, distance);
     }
 
     private void Move()
