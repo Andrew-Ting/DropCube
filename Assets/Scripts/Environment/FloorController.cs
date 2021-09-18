@@ -12,6 +12,8 @@ public class FloorController : MonoBehaviour
     private GameObject Player;
     [SerializeField]
     private GameObject resetButtonPrefab;
+    [SerializeField]
+    private GameObject powerupPrefab;
 
     private List<GameObject> blocks;
     private List<Vector3> fallenBlocks;
@@ -116,7 +118,11 @@ public class FloorController : MonoBehaviour
             StartCoroutine(LowerBlock(block, position, new Vector3(position.x, 0, position.z), 5f));
         }
     }
-
+    public void PlaceBlockAtPosition(Vector3 position) {
+        GameObject block = CreateBlock(position);
+        block.transform.parent = this.transform;
+        blocks.Add(block);
+    }
     private GameObject CreateBlock(Vector3 position)
     {
         GameObject block = Instantiate(blockPrefab, position, Quaternion.identity);
@@ -124,7 +130,12 @@ public class FloorController : MonoBehaviour
         blocks.Add(block);
         return block;
     }
-    
+    private void ResetPowerupIfObtained() {
+        if (!FindObjectOfType<PowerupController>()) {
+            Vector3 randomPosition = new Vector3(Random.Range(-floorSize + 1, floorSize - 1), 1, Random.Range(-floorSize + 1, floorSize - 1));
+            GameObject powerup = Instantiate(powerupPrefab, randomPosition, Quaternion.Euler(0, 45, 45));
+        }
+    }
     private IEnumerator LowerBlock(GameObject block, Vector3 startPos, Vector3 newPos, float overTime)
     {
         float startTime = Time.time;
@@ -154,7 +165,7 @@ public class FloorController : MonoBehaviour
 
         ResetFloor();
         fallenBlocks.Clear();
-
+        ResetPowerupIfObtained();
         Invoke("DelayedResetParams", 5f);
     }
 
