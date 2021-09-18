@@ -21,7 +21,8 @@ public class FloorController : MonoBehaviour
     private bool continueCoroutine;
     private GameObject buttonBlock;
 
-    private float verticalDisplacement = 20f;
+    private float verticalDisplacement = 10f;
+    private float resetTime = 2f;
 
     void Awake()
     {
@@ -77,6 +78,11 @@ public class FloorController : MonoBehaviour
 
             int indexToDrop = Random.Range(0, blocks.Count - 1);
 
+            while(blocks[indexToDrop].Equals(buttonBlock))
+            {
+                indexToDrop = Random.Range(0, blocks.Count - 1);
+            }
+
             GameObject blockToDrop;
 
             if (blocks[indexToDrop])
@@ -115,7 +121,7 @@ public class FloorController : MonoBehaviour
         foreach (Vector3 position in fallenBlocks)
         {
             GameObject block = CreateBlock(position);
-            StartCoroutine(LowerBlock(block, position, new Vector3(position.x, 0, position.z), 5f));
+            StartCoroutine(LowerBlock(block, position, new Vector3(position.x, 0, position.z), resetTime));
         }
     }
     public void PlaceBlockAtPosition(Vector3 position) {
@@ -166,7 +172,7 @@ public class FloorController : MonoBehaviour
         ResetFloor();
         fallenBlocks.Clear();
         ResetPowerupIfObtained();
-        Invoke("DelayedResetParams", 5f);
+        Invoke("DelayedResetParams", resetTime);
     }
 
     private void DelayedResetParams()
@@ -175,5 +181,27 @@ public class FloorController : MonoBehaviour
         Player.GetComponent<PlayerController>().EnableMovement();
         continueCoroutine = true;
         DropBlocksCoroutine();
+    }
+
+    public void GameOver()
+    {
+        continueCoroutine = false;
+        foreach (Transform child in transform)
+        {
+            Rigidbody rb = child.gameObject.GetComponent<Rigidbody>();
+            rb.constraints = RigidbodyConstraints.None;
+            rb.useGravity = true;
+            rb.AddExplosionForce(12f, Random.insideUnitSphere, 5f, 2f);
+        }
+
+        Invoke("DestroyBlocks", 4f);
+    }
+
+    private void DestroyBlocks()
+    {
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 }
