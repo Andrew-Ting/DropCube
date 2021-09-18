@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject floor;
+
     private CharacterController controller;
     private Animator anim;
     private float gravity;
     private bool coroutineStarted;
+    private bool movementAllowed;
 
     // Start is called before the first frame update
     void Start()
@@ -16,6 +20,7 @@ public class PlayerController : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         gravity = 0.0f;
         coroutineStarted = false;
+        movementAllowed = true;
     }
 
     // Update is called once per frame
@@ -77,7 +82,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (!coroutineStarted)
+        if (!coroutineStarted && movementAllowed)
         {
             coroutineStarted = true;
             transform.rotation = Quaternion.LookRotation(movement);
@@ -99,6 +104,26 @@ public class PlayerController : MonoBehaviour
         }
 
         transform.position = newPos;
+        if (floor.GetComponent<FloorController>().CheckPlayerTouchedReset())
+        {
+            movementAllowed = false;
+            floor.GetComponent<FloorController>().ResetLevel();
+        }
         coroutineStarted = false;
+    }
+
+    public float GetXPosition()
+    {
+        return transform.position.x;
+    }
+
+    public float GetZPosition()
+    {
+        return transform.position.z;
+    }
+
+    public void EnableMovement()
+    {
+        movementAllowed = true;
     }
 }
