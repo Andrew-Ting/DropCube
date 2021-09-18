@@ -8,11 +8,18 @@ public class FloorController : MonoBehaviour
     private GameObject blockPrefab;
     [SerializeField]
     private int floorSize;
+    [SerializeField]
+    private GameObject Player;
+    [SerializeField]
+    private GameObject resetButtonPrefab;
 
     private List<GameObject> blocks;
     private List<Vector3> fallenBlocks;
     private float secondsBetweenDrop;
     private bool continueCoroutine;
+    private GameObject buttonBlock;
+
+    private float verticalDisplacement = 20f;
 
     void Awake()
     {
@@ -21,6 +28,7 @@ public class FloorController : MonoBehaviour
         secondsBetweenDrop = 1f;
         continueCoroutine = true;
         SetupBlocks();
+        GenerateResetButton();
         DropBlocksCoroutine();
     }
 
@@ -33,6 +41,25 @@ public class FloorController : MonoBehaviour
                 CreateBlock(new Vector3(i, 0, j));
             }
         }
+    }
+
+    private void GenerateResetButton()
+    {
+        int indexForResetButton = Random.Range(0, blocks.Count - 1);
+
+        while (blocks[indexForResetButton].transform.position.x == Player.GetComponent<PlayerController>().GetXPosition() &&
+            blocks[indexForResetButton].transform.position.z == Player.GetComponent<PlayerController>().GetZPosition())
+        {
+            indexForResetButton = Random.Range(0, blocks.Count - 1);
+        }
+
+        buttonBlock = blocks[indexForResetButton];
+        blocks.Remove(buttonBlock);
+        Instantiate(
+            resetButtonPrefab, 
+            new Vector3(buttonBlock.transform.position.x, 0.6f, buttonBlock.transform.position.z),
+            Quaternion.identity,
+            buttonBlock.transform);
     }
 
     private void DropBlocksCoroutine()
@@ -59,17 +86,18 @@ public class FloorController : MonoBehaviour
                 continue;
             }
 
-            blockToDrop.GetComponent<BlockController>().Drop();
-
-            if (!fallenBlocks.Contains(blockToDrop.transform.position))
+            Vector3 newDropBlockPos = blockToDrop.transform.position + new Vector3(0, verticalDisplacement, 0);
+            if (!fallenBlocks.Contains(newDropBlockPos))
             {
-                fallenBlocks.Add(blockToDrop.transform.position);
+                fallenBlocks.Add(newDropBlockPos);
             }
 
             if (blocks.Contains(blockToDrop))
             {
                 blocks.Remove(blockToDrop);
             }
+
+            blockToDrop.GetComponent<BlockController>().Drop();
 
             yield return new WaitForSeconds(4f);
 
@@ -80,18 +108,61 @@ public class FloorController : MonoBehaviour
         }
     }
 
-    public void ResetFloor()
+    private void ResetFloor()
     {
         foreach (Vector3 position in fallenBlocks)
         {
-            CreateBlock(position);
+            GameObject block = CreateBlock(position);
+            StartCoroutine(LowerBlock(block, position, new Vector3(position.x, 0, position.z), 5f));
         }
     }
 
-    private void CreateBlock(Vector3 position)
+    private GameObject CreateBlock(Vector3 position)
     {
         GameObject block = Instantiate(blockPrefab, position, Quaternion.identity);
         block.transform.parent = this.transform;
         blocks.Add(block);
+        return block;
+    }
+    
+    private IEnumerator LowerBlock(GameObject block, Vector3 startPos, Vector3 newPos, float overTime)
+    {
+        float startTime = Time.time;
+        while (Time.time < startTime + overTime)
+        {
+            block.transform.position = Vector3.Lerp(startPos, newPos, (Time.time - startTime) / overTime);
+            yield return null;
+        }
+
+        block.transform.position = newPos;
+    }
+
+    public bool CheckPlayerTouchedReset()
+    {
+        return (Player.GetComponent<PlayerController>().GetXPosition() == buttonBlock.transform.position.x &&
+            Player.GetComponent<PlayerController>().GetZPosition() == buttonBlock.transform.position.z);
+    }
+
+    public void ResetLevel()
+    {
+        continueCoroutine = false;
+        foreach (Transform child in buttonBlock.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        blocks.Add(buttonBlock);
+
+        ResetFloor();
+        GenerateResetButton();
+        fallenBlocks.Clear();
+
+        Invoke("DelayedResetParams", 5f);
+    }
+
+    private void DelayedResetParams()
+    {
+        Player.GetComponent<PlayerController>().EnableMovement();
+        continueCoroutine = true;
+        DropBlocksCoroutine();
     }
 }
