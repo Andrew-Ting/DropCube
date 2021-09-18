@@ -5,11 +5,12 @@ using UnityEngine;
 public class BlockController : MonoBehaviour
 {
     private Rigidbody rb;
-    private bool useGravity = true;
+    private Animator anim;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -19,6 +20,15 @@ public class BlockController : MonoBehaviour
     }
 
     public void Drop()
+    {
+        if (transform.gameObject)
+        {
+            anim.SetTrigger("BlockFallTrigger");
+            Invoke("RigidBodyDrop", 2f);
+        }
+    }
+
+    private void RigidBodyDrop()
     {
         if (transform.gameObject)
         {
