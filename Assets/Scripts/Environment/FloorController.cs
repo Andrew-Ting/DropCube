@@ -153,7 +153,6 @@ public class FloorController : MonoBehaviour
         blocks.Add(buttonBlock);
 
         ResetFloor();
-        GenerateResetButton();
         fallenBlocks.Clear();
 
         Invoke("DelayedResetParams", 5f);
@@ -161,6 +160,7 @@ public class FloorController : MonoBehaviour
 
     private void DelayedResetParams()
     {
+        GenerateResetButton();
         Player.GetComponent<PlayerController>().EnableMovement();
         continueCoroutine = true;
         DropBlocksCoroutine();
