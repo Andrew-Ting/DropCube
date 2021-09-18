@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     private float gravity;
     private float moveSpeed;
+    private bool coroutineStarted;
 
     // Start is called before the first frame update
     void Start()
@@ -14,6 +15,7 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         gravity = 0.0f;
         moveSpeed = 1f;
+        coroutineStarted = false;
     }
 
     // Update is called once per frame
@@ -39,35 +41,51 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         Vector3 movement = Vector3.zero;
+        Vector3 newPosition;
 
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             movement = Vector3.right * -1;
-            
+            newPosition = transform.position + new Vector3(-1, 0, 0);
         }
         else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             movement = Vector3.forward * -1;
+            newPosition = transform.position + new Vector3(0, 0, -1);
         }
         else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             movement = Vector3.right;
+            newPosition = transform.position + new Vector3(1, 0, 0);
         }
         else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             movement = Vector3.forward;
+            newPosition = transform.position + new Vector3(0, 0, 1);
         }
         else
         {
             return;
         }
 
-        transform.rotation = Quaternion.LookRotation(movement) * Quaternion.Euler(0, 90, 0);
-        Vector3 startPos = transform.position;
-
-        while (Vector3.Distance(startPos, transform.position) < 1)
+        transform.rotation = Quaternion.LookRotation(movement);
+        if (!coroutineStarted)
         {
-            controller.Move(movement * moveSpeed * Time.deltaTime);
+            coroutineStarted = true;
+            StartCoroutine(MovePlayer(transform.position, newPosition, 0.5f));
         }
+    }
+
+    private IEnumerator MovePlayer(Vector3 startPos, Vector3 newPos, float overTime)
+    {
+        float startTime = Time.time;
+        while (Time.time < startTime + overTime)
+        {
+            transform.position = Vector3.Lerp(startPos, newPos, (Time.time - startTime) / overTime);
+            yield return null;
+        }
+
+        transform.position = newPos;
+        coroutineStarted = false;
     }
 }
