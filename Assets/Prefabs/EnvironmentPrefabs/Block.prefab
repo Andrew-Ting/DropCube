@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8844086540348046456}
   - component: {fileID: -3703398352552502843}
   - component: {fileID: 5221377075441425891}
+  - component: {fileID: 7770147688556710996}
   m_Layer: 0
   m_Name: Block
   m_TagString: Untagged
@@ -62,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9d65600308802d74a91a3592a4124312, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -125,3 +126,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b945643343dd44b870c303461646e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &7770147688556710996
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1007158837065562444}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6d9064c860fd48640a5330882502d0df, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour
 {
     private CharacterController controller;
     private float gravity;
-    private float moveSpeed;
     private bool coroutineStarted;
 
     // Start is called before the first frame update
@@ -14,7 +13,6 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         gravity = 0.0f;
-        moveSpeed = 1f;
         coroutineStarted = false;
     }
 
@@ -68,10 +66,10 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        transform.rotation = Quaternion.LookRotation(movement);
         if (!coroutineStarted)
         {
             coroutineStarted = true;
+            transform.rotation = Quaternion.LookRotation(movement);
             StartCoroutine(MovePlayer(transform.position, newPosition, 0.5f));
         }
     }
