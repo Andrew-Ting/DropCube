@@ -176,7 +176,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -200,7 +200,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 23597941}
   m_LocalRotation: {x: 0.18912409, y: 0.37457952, z: -0.07833775, w: 0.90431494}
-  m_LocalPosition: {x: -44, y: 30, z: -44}
+  m_LocalPosition: {x: -44, y: 28, z: -44}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -343,7 +343,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockPrefab: {fileID: 1007158837065562444, guid: ed98445b784c79f4d8294c9be118915a, type: 3}
-  floorSize: 10
+  floorSize: 6
   Player: {fileID: 2027699136}
   resetButtonPrefab: {fileID: 1215144295598268643, guid: c28716dbcb082e84fa38eed57830bd36, type: 3}
 --- !u!1 &1792941934
