@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
         gravity = 0.0f;
         coroutineStarted = false;
         movementAllowed = true;
+        transform.position = Vector3.up;
     }
 
     // Update is called once per frame
@@ -32,8 +33,10 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyGravity()
     {
-        if (!controller.isGrounded || !IsGrounded())
+        if (!IsGrounded())
         {
+            movementAllowed = false;
+            floor.GetComponent<FloorController>().GameOver();
             gravity -= 9.8f;
             controller.Move(new Vector3(0.0f, gravity, 0.0f));
         }
