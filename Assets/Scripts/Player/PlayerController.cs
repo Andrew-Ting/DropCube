@@ -108,7 +108,7 @@ public class PlayerController : MonoBehaviour
             {
                 anim.SetTrigger("StepTrigger");
             }
-            StartCoroutine(MovePlayer(transform.position, newPosition, 0.5f));
+            StartCoroutine(MovePlayer(transform.position, newPosition, 0.3f));
         }
     }
 
