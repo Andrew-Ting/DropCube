@@ -9,7 +9,7 @@ public class SceneSwitcher : MonoBehaviour
 {
     private enum SceneType {
         MainMenu,
-        LoadLevel,
+        LoadLevelScene,
         GameplayScene,
         GameOver
     };
@@ -20,7 +20,9 @@ public class SceneSwitcher : MonoBehaviour
     public Animator screenTransition;
     public void Awake() {
         Button thisButton = GetComponent<Button>();
+        Debug.Log("Onclick added");
        thisButton.onClick.AddListener(() => {
+           Debug.Log("Transitioning");
             StartCoroutine(loadScene());
        });
     }
