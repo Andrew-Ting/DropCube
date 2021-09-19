@@ -71,13 +71,10 @@ public class FloorController : MonoBehaviour
 
         Vector3 playerPos = new Vector3(Player.GetComponent<PlayerController>().GetXPosition(), 1, Player.GetComponent<PlayerController>().GetZPosition());
 
-        Debug.Log(playerPos.x + ", " + playerPos.z);
-
         while (Mathf.Abs(blocks[indexForResetButton].transform.position.x - playerPos.x) < floorSize - 1 ||
             Mathf.Abs(blocks[indexForResetButton].transform.position.z - playerPos.z) < floorSize - 1)
         {
             indexForResetButton = Random.Range(0, blocks.Count - 1);
-            Debug.Log(blocks[indexForResetButton].transform.position.x + " - " + playerPos.x + ", " + blocks[indexForResetButton].transform.position.z + " - " + playerPos.z);
         }
 
         buttonBlock = blocks[indexForResetButton];
@@ -87,8 +84,6 @@ public class FloorController : MonoBehaviour
             new Vector3(buttonBlock.transform.position.x, 0.6f, buttonBlock.transform.position.z),
             Quaternion.identity,
             buttonBlock.transform);
-
-        Debug.Log(button.transform.position);
     }
 
     private void DropBlocksCoroutine()
