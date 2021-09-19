@@ -1537,6 +1537,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1533489522961527217, guid: f7d64d1689608dc459668ae58360fbb5, type: 3}
+      propertyPath: m_ScaleFactor
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 2143317711620690791, guid: f7d64d1689608dc459668ae58360fbb5, type: 3}
       propertyPath: m_Name
       value: TransitionPanels
