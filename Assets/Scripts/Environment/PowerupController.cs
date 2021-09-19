@@ -7,7 +7,7 @@ public class PowerupController : MonoBehaviour
     [SerializeField]
     private float degreesPerSecond = 15.0f;
     [SerializeField]
-    private float amplitude = 0.5f;
+    private float amplitude = 0.3f;
     [SerializeField]
     private float frequency = 1f;
 
