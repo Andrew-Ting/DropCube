@@ -13,12 +13,6 @@ public class BlockController : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void Drop()
     {
         if (transform.gameObject)

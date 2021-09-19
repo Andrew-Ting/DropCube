@@ -72,28 +72,28 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        Vector3 movement = Vector3.zero;
+        Vector3 movement = Vector3.right;
         Vector3 newPosition;
 
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
+            movement = Vector3.forward;
+            newPosition = transform.position + new Vector3(0, 0, 1);
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
             movement = Vector3.right * -1;
             newPosition = transform.position + new Vector3(-1, 0, 0);
         }
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             movement = Vector3.forward * -1;
             newPosition = transform.position + new Vector3(0, 0, -1);
         }
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             movement = Vector3.right;
             newPosition = transform.position + new Vector3(1, 0, 0);
-        }
-        else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            movement = Vector3.forward;
-            newPosition = transform.position + new Vector3(0, 0, 1);
         }
         else
         {

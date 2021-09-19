@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FloorController : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class FloorController : MonoBehaviour
     private GameObject Player;
     [SerializeField]
     private GameObject resetButtonPrefab;
+    [SerializeField]
+    private Text roundText;
     [SerializeField]
     private GameObject powerupPrefab;
 
@@ -176,6 +179,10 @@ public class FloorController : MonoBehaviour
     public void ResetLevel()
     {
         continueCoroutine = false;
+
+        int round = int.Parse(roundText.text);
+        roundText.text = (++round).ToString();
+
         foreach (Transform child in buttonBlock.transform)
         {
             Destroy(child.gameObject);
