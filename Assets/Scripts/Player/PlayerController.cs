@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour
         transform.position = newPos;
         if (floor.GetComponent<FloorController>().CheckPlayerTouchedReset())
         {
-            // audioManager.Play("LevelUp");
+            audioManager.Play("LevelUp");
             movementAllowed = false;
             floor.GetComponent<FloorController>().ResetLevel();
             skyController.RefreshSkyTexture();
