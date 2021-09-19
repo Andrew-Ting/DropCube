@@ -15,6 +15,11 @@ public class BlockController : MonoBehaviour
 
     private void Update()
     {
+        if (IsBlockAbove())
+        {
+            RigidBodyDrop();
+        }
+
         if (transform.position.y < -10f)
         {
             Destroy(transform.gameObject);
@@ -37,5 +42,19 @@ public class BlockController : MonoBehaviour
             rb.constraints &= ~RigidbodyConstraints.FreezePositionY;
             rb.useGravity = true;
         }
+    }
+
+    private bool IsBlockAbove()
+    {
+        RaycastHit hit;
+        float distance = 1f;
+        Vector3 dir = new Vector3(0, 1);
+
+        if (Physics.Raycast(transform.position, dir, out hit, distance))
+        {
+            return hit.transform.gameObject.tag == "Block";
+        }
+
+        return false;
     }
 }
