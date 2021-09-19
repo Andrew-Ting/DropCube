@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private float gravity;
     private bool coroutineStarted;
     private bool movementAllowed;
+    private SkyController skyController;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         playerInventory = FindObjectOfType<PlayerInventory>();
         floorController = FindObjectOfType<FloorController>();
+        skyController = FindObjectOfType<SkyController>();
         gravity = 0.0f;
         coroutineStarted = false;
         movementAllowed = true;
@@ -126,6 +128,7 @@ public class PlayerController : MonoBehaviour
         {
             movementAllowed = false;
             floor.GetComponent<FloorController>().ResetLevel();
+            skyController.RefreshSkyTexture();
         }
         coroutineStarted = false;
     }
