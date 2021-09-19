@@ -205,6 +205,14 @@ public class FloorController : MonoBehaviour
     public void GameOver()
     {
         continueCoroutine = false;
+
+        Score.currentScore = int.Parse(roundText.text);
+        
+        if (Score.currentScore > Score.highScore)
+        {
+            Score.highScore = Score.currentScore;
+        }
+
         foreach (Transform child in transform)
         {
             Rigidbody rb = child.gameObject.GetComponent<Rigidbody>();
