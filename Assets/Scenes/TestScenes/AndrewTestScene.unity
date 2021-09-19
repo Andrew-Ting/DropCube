@@ -232,6 +232,7 @@ MonoBehaviour:
   floorSize: 6
   Player: {fileID: 378778594}
   resetButtonPrefab: {fileID: 1215144295598268643, guid: c28716dbcb082e84fa38eed57830bd36, type: 3}
+  roundText: {fileID: 0}
   powerupPrefab: {fileID: 6317864926437945260, guid: 2a246e3ed190fb046a18b9342caf6550, type: 3}
 --- !u!4 &263336166
 Transform:
