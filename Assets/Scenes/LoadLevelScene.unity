@@ -671,7 +671,7 @@ GameObject:
   - component: {fileID: 1615661803}
   - component: {fileID: 1615661802}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: TransitionPanels
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -962,7 +962,7 @@ GameObject:
   - component: {fileID: 1848388273}
   - component: {fileID: 1848388272}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: CrossFadePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
