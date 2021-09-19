@@ -15,6 +15,8 @@ public class FloorController : MonoBehaviour
     private GameObject resetButtonPrefab;
     [SerializeField]
     private Text roundText;
+    [SerializeField]
+    private GameObject powerupPrefab;
 
     private List<GameObject> blocks;
     private List<Vector3> fallenBlocks;
@@ -24,7 +26,8 @@ public class FloorController : MonoBehaviour
 
     private float verticalDisplacement = 10f;
     private float resetTime = 2f;
-
+    private float powerupMinimumResetTime = 20f;
+    private float powerupResetTimeUncertainty = 10f;
     void Awake()
     {
         blocks = new List<GameObject>();
@@ -34,6 +37,7 @@ public class FloorController : MonoBehaviour
         SetupBlocks();
         GenerateResetButton();
         DropBlocksCoroutine();
+        PowerupRespawnCoroutine();
     }
 
     private void SetupBlocks()
@@ -70,7 +74,18 @@ public class FloorController : MonoBehaviour
     {
         StartCoroutine(DropBlocks());
     }
-
+    private void PowerupRespawnCoroutine() { // spin lock check for existence of powerup; not the most efficient, but it decouples powerupcontroller and floorcontroller
+        StartCoroutine(PowerupRespawn());
+    }
+    private IEnumerator PowerupRespawn() {
+        while (true) { 
+            if (!FindObjectOfType<PowerupController>()) {
+                yield return new WaitForSeconds(Random.Range(powerupMinimumResetTime, powerupMinimumResetTime + powerupResetTimeUncertainty));
+                ResetPowerupIfObtained();
+            }
+            yield return new WaitForSeconds(5);
+        }  
+    }
     private IEnumerator DropBlocks()
     {
         while(continueCoroutine)
@@ -125,7 +140,11 @@ public class FloorController : MonoBehaviour
             StartCoroutine(LowerBlock(block, position, new Vector3(position.x, 0, position.z), resetTime));
         }
     }
-
+    public void PlaceBlockAtPosition(Vector3 position) {
+        GameObject block = CreateBlock(position);
+        block.transform.parent = this.transform;
+        fallenBlocks.Remove(new Vector3(position.x, verticalDisplacement, position.z));
+    }
     private GameObject CreateBlock(Vector3 position)
     {
         GameObject block = Instantiate(blockPrefab, position, Quaternion.identity);
@@ -133,7 +152,12 @@ public class FloorController : MonoBehaviour
         blocks.Add(block);
         return block;
     }
-    
+    private void ResetPowerupIfObtained() {
+        if (!FindObjectOfType<PowerupController>()) {
+            Vector3 randomPosition = new Vector3(Random.Range(-floorSize + 1, floorSize - 1), 1, Random.Range(-floorSize + 1, floorSize - 1));
+            GameObject powerup = Instantiate(powerupPrefab, randomPosition, Quaternion.Euler(0, 45, 45));
+        }
+    }
     private IEnumerator LowerBlock(GameObject block, Vector3 startPos, Vector3 newPos, float overTime)
     {
         float startTime = Time.time;
@@ -167,7 +191,6 @@ public class FloorController : MonoBehaviour
 
         ResetFloor();
         fallenBlocks.Clear();
-
         Invoke("DelayedResetParams", resetTime);
     }
 

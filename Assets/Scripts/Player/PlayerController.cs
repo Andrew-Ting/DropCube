@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     private GameObject floor;
 
     private CharacterController controller;
+    private PlayerInventory playerInventory;
+    private FloorController floorController;
     private Animator anim;
     private float gravity;
     private bool coroutineStarted;
@@ -18,6 +20,8 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         anim = GetComponentInChildren<Animator>();
+        playerInventory = FindObjectOfType<PlayerInventory>();
+        floorController = FindObjectOfType<FloorController>();
         gravity = 0.0f;
         coroutineStarted = false;
         movementAllowed = true;
@@ -29,6 +33,7 @@ public class PlayerController : MonoBehaviour
     {
         Move();
         ApplyGravity();
+        CheckIfPowerupUsed();
     }
 
     private void ApplyGravity()
@@ -53,6 +58,16 @@ public class PlayerController : MonoBehaviour
         Vector3 dir = new Vector3(0, -1);
 
         return Physics.Raycast(transform.position, dir, out hit, distance);
+    }
+
+    private void CheckIfPowerupUsed() {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            bool canUsePowerup = playerInventory.UseBlockPowerup(transform.position + transform.forward);
+            if (canUsePowerup) {
+                floorController.PlaceBlockAtPosition(new Vector3(transform.position.x, Mathf.Round(transform.position.y), transform.position.z) + transform.forward + Vector3.down);
+            }
+        }
     }
 
     private void Move()
