@@ -127,7 +127,7 @@ public class FloorController : MonoBehaviour
     public void PlaceBlockAtPosition(Vector3 position) {
         GameObject block = CreateBlock(position);
         block.transform.parent = this.transform;
-        blocks.Add(block);
+        fallenBlocks.Remove(new Vector3(position.x, verticalDisplacement, position.z));
     }
     private GameObject CreateBlock(Vector3 position)
     {
