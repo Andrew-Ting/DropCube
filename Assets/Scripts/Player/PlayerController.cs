@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     private bool coroutineStarted;
     private bool movementAllowed;
     private SkyController skyController;
+    private AudioManager audioManager;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +25,7 @@ public class PlayerController : MonoBehaviour
         playerInventory = FindObjectOfType<PlayerInventory>();
         floorController = FindObjectOfType<FloorController>();
         skyController = FindObjectOfType<SkyController>();
+        audioManager = FindObjectOfType<AudioManager>();
         gravity = 0.0f;
         coroutineStarted = false;
         movementAllowed = true;
@@ -43,6 +45,7 @@ public class PlayerController : MonoBehaviour
         if (!IsGrounded())
         {
             movementAllowed = false;
+            audioManager.Play("GameOver");
             floor.GetComponent<FloorController>().GameOver();
             gravity -= 9.8f;
             controller.Move(new Vector3(0.0f, gravity, 0.0f));
@@ -126,6 +129,7 @@ public class PlayerController : MonoBehaviour
         transform.position = newPos;
         if (floor.GetComponent<FloorController>().CheckPlayerTouchedReset())
         {
+            audioManager.Play("LevelUp");
             movementAllowed = false;
             floor.GetComponent<FloorController>().ResetLevel();
             skyController.RefreshSkyTexture();

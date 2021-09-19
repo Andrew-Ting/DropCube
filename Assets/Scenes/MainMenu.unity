@@ -938,6 +938,78 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &577422319
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 577422321}
+  - component: {fileID: 577422320}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &577422320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 577422319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d41e70c4e2b3bf744868ca46932da2b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mixerGroup: {fileID: 24300002, guid: dd7f793459512a8408e560f09f92bb43, type: 2}
+  sounds:
+  - name: GameOver
+    clip: {fileID: 8300000, guid: b2cf9bb4eddf56349896908eb8090483, type: 3}
+    volume: 0
+    volumeVariance: 0
+    pitch: 0.5
+    pitchVariance: 0
+    loop: 0
+    mixerGroup: {fileID: 24300002, guid: dd7f793459512a8408e560f09f92bb43, type: 2}
+    source: {fileID: 0}
+  - name: BGM
+    clip: {fileID: 8300000, guid: b8074d32ea2687b47ac66fa932b8e3cb, type: 3}
+    volume: 0.291
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 1
+    mixerGroup: {fileID: 24300002, guid: dd7f793459512a8408e560f09f92bb43, type: 2}
+    source: {fileID: 0}
+  - name: LevelUp
+    clip: {fileID: 8300000, guid: 65769f7210ac0f54b8c51908bae33755, type: 3}
+    volume: 0.055
+    volumeVariance: 0
+    pitch: 0.5
+    pitchVariance: 0
+    loop: 0
+    mixerGroup: {fileID: 24300002, guid: dd7f793459512a8408e560f09f92bb43, type: 2}
+    source: {fileID: 0}
+--- !u!4 &577422321
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 577422319}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 152.17896, y: 128.93567, z: 214.81854}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &579844194
 GameObject:
   m_ObjectHideFlags: 0
@@ -1182,6 +1254,7 @@ GameObject:
   m_Component:
   - component: {fileID: 716088942}
   - component: {fileID: 716088943}
+  - component: {fileID: 716088944}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -1255,13 +1328,39 @@ MonoBehaviour:
   m_FillRect: {fileID: 1290981924}
   m_HandleRect: {fileID: 947142894}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 716088944}
+        m_TargetAssemblyTypeName: AudioAdjustment, Assembly-CSharp
+        m_MethodName: SetSfxLevel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &716088944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 716088941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 676b85beb8be2254babbde609bbb629a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  masterMixer: {fileID: 24100000, guid: dd7f793459512a8408e560f09f92bb43, type: 2}
+  soundSlider: {fileID: 716088943}
 --- !u!1 &751068973
 GameObject:
   m_ObjectHideFlags: 0
@@ -1566,7 +1665,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &907498713
 MonoBehaviour:
   m_ObjectHideFlags: 0
