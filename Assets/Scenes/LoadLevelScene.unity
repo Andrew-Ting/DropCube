@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -308,7 +308,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 969232028}
-  - component: {fileID: 969232029}
+  - component: {fileID: 969232030}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Untagged
@@ -330,7 +330,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &969232029
+--- !u!114 &969232030
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -339,13 +339,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 969232027}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6192214c44f9d6347979e4a710a77875, type: 3}
+  m_Script: {fileID: 11500000, guid: f2603ce0c2104bb468733a14899409db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   blockPrefab: {fileID: 8560708597950790897, guid: 6bd089d91345a9f42975775c55246e72, type: 3}
-  floorSize: 5
-  Player: {fileID: 2027699136}
-  resetButtonPrefab: {fileID: 1215144295598268643, guid: c28716dbcb082e84fa38eed57830bd36, type: 3}
+  player: {fileID: 2027699136}
 --- !u!1 &1792941934
 GameObject:
   m_ObjectHideFlags: 0
@@ -465,6 +463,10 @@ PrefabInstance:
       propertyPath: floor
       value: 
       objectReference: {fileID: 969232027}
+    - target: {fileID: 3504730013056919391, guid: dfc9f59a0edd9b74a922090ca3e8832c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4684366200941290936, guid: dfc9f59a0edd9b74a922090ca3e8832c, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -475,7 +477,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4684366200941290936, guid: dfc9f59a0edd9b74a922090ca3e8832c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: -9
       objectReference: {fileID: 0}
     - target: {fileID: 4684366200941290936, guid: dfc9f59a0edd9b74a922090ca3e8832c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -509,5 +511,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3504730013056919391, guid: dfc9f59a0edd9b74a922090ca3e8832c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: dfc9f59a0edd9b74a922090ca3e8832c, type: 3}
