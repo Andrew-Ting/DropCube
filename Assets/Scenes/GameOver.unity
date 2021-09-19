@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1533489522961527217, guid: f7d64d1689608dc459668ae58360fbb5, type: 3}
+      propertyPath: m_ScaleFactor
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 2143317711620690791, guid: f7d64d1689608dc459668ae58360fbb5, type: 3}
       propertyPath: m_Name
       value: TransitionPanels
@@ -314,6 +318,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 818005a0c80fdb4498ed36f506aaf754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scoreText: {fileID: 0}
+  highScoreText: {fileID: 0}
 --- !u!1 &213052318
 GameObject:
   m_ObjectHideFlags: 0
@@ -1594,7 +1600,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destinationScene: 1
-  screenTransition: {fileID: 0}
+  screenTransition: {fileID: 880711517}
 --- !u!114 &1998682521
 MonoBehaviour:
   m_ObjectHideFlags: 0

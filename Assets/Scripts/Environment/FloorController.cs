@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class FloorController : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class FloorController : MonoBehaviour
     private Text roundText;
     [SerializeField]
     private GameObject powerupPrefab;
+
+    private Animator screenTransition;
 
     private List<GameObject> blocks;
     private List<Vector3> fallenBlocks;
@@ -35,6 +38,7 @@ public class FloorController : MonoBehaviour
         fallenBlocks = new List<Vector3>();
         secondsBetweenDrop = 1f;
         continueCoroutine = true;
+        screenTransition = GameObject.Find("CrossFadePanel").GetComponent<Animator>();
         SetupBlocks();
         GenerateResetButton();
         DropBlocksCoroutine();
@@ -223,6 +227,7 @@ public class FloorController : MonoBehaviour
         }
 
         Invoke("DestroyBlocks", 4f);
+        StartCoroutine(SwitchToGameOver());
     }
 
     private void DestroyBlocks()
@@ -231,5 +236,11 @@ public class FloorController : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+    }
+    private IEnumerator SwitchToGameOver() {
+        screenTransition.SetTrigger("gameOver");
+        yield return new WaitForSecondsRealtime(3f);
+        SceneManager.LoadScene("GameOver");
+        yield return false;
     }
 }
