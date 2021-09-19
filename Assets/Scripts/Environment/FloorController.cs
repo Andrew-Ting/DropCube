@@ -165,7 +165,7 @@ public class FloorController : MonoBehaviour
         foreach (Vector3 position in fallenBlocks)
         {
             GameObject block = CreateBlock(position);
-            StartCoroutine(LowerBlock(block, position, new Vector3(position.x, 0, position.z), dropTime));
+            StartCoroutine(LowerBlock(block, position, new Vector3(position.x, 0, position.z), dropTime + 0.2f));
         }
     }
     public void PlaceBlockAtPosition(Vector3 position)
