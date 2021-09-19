@@ -44,7 +44,7 @@ public class FloorController : MonoBehaviour
         dropTime = 1.5f;
         numBlocksToDrop = 1;
         minSecondsToDrop = 0.2f;
-        minDropTime = 0.5f;
+        minDropTime = 1f;
         continueCoroutine = true;
         screenTransition = GameObject.Find("CrossFadePanel").GetComponent<Animator>();
         round = 0;
@@ -69,21 +69,26 @@ public class FloorController : MonoBehaviour
     {
         int indexForResetButton = Random.Range(0, blocks.Count - 1);
 
-        Vector3 playerPos = new Vector3(Player.GetComponent<PlayerController>().GetXPosition(), Player.GetComponent<PlayerController>().GetZPosition());
+        Vector3 playerPos = new Vector3(Player.GetComponent<PlayerController>().GetXPosition(), 1, Player.GetComponent<PlayerController>().GetZPosition());
+
+        Debug.Log(playerPos.x + ", " + playerPos.z);
 
         while (Mathf.Abs(blocks[indexForResetButton].transform.position.x - playerPos.x) < floorSize - 1 ||
             Mathf.Abs(blocks[indexForResetButton].transform.position.z - playerPos.z) < floorSize - 1)
         {
             indexForResetButton = Random.Range(0, blocks.Count - 1);
+            Debug.Log(blocks[indexForResetButton].transform.position.x + " - " + playerPos.x + ", " + blocks[indexForResetButton].transform.position.z + " - " + playerPos.z);
         }
 
         buttonBlock = blocks[indexForResetButton];
         blocks.Remove(buttonBlock);
-        Instantiate(
+        GameObject button = Instantiate(
             resetButtonPrefab,
             new Vector3(buttonBlock.transform.position.x, 0.6f, buttonBlock.transform.position.z),
             Quaternion.identity,
             buttonBlock.transform);
+
+        Debug.Log(button.transform.position);
     }
 
     private void DropBlocksCoroutine()
@@ -221,13 +226,13 @@ public class FloorController : MonoBehaviour
 
         ResetFloor();
         fallenBlocks.Clear();
-        CheckLevelProgression();
         Invoke("DelayedResetParams", dropTime + 0.25f);
     }
 
     private void DelayedResetParams()
     {
         GenerateResetButton();
+        CheckLevelProgression();
         Player.GetComponent<PlayerController>().EnableMovement();
         continueCoroutine = true;
         DropBlocksCoroutine();
@@ -282,13 +287,13 @@ public class FloorController : MonoBehaviour
             secondsBetweenDrop += 0.1f;
         }
 
-        
+        /*
         if (round >= 10 && round % 10 == 0 && round <= 40)
         {
             numBlocksToDrop++;
             dropTime = minDropTime + 0.4f;
             secondsBetweenDrop = minDropTime + 0.5f;
-            DropBlocksCoroutine();
         }
+        */
     }
 }
