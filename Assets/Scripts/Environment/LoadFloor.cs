@@ -70,6 +70,6 @@ public class LoadFloor : MonoBehaviour
 
     private void LoadGame()
     {
-        SceneManager.LoadScene("WorkScene");
+        SceneManager.LoadScene("GameplayScene");
     }
 }
