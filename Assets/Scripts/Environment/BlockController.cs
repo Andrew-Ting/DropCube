@@ -15,7 +15,7 @@ public class BlockController : MonoBehaviour
 
     private void Update()
     {
-        if (transform.position.y <= -10f)
+        if (transform.position.y < -10f)
         {
             Destroy(transform.gameObject);
         }

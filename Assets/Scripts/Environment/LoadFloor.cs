@@ -59,8 +59,11 @@ public class LoadFloor : MonoBehaviour
     private IEnumerator RaiseBlock(GameObject block, Vector3 startPos, Vector3 newPos, float overTime)
     {
         float startTime = Time.time;
+        int i = 0;
         while (Time.time < startTime + overTime)
         {
+            Debug.Log(block + " at iteration " + i);
+            i++;
             block.transform.position = Vector3.Lerp(startPos, newPos, (Time.time - startTime) / overTime);
             yield return null;
         }
