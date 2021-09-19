@@ -29,19 +29,22 @@ public class FloorController : MonoBehaviour
     private int round;
 
     private float verticalDisplacement = 10f;
-    private float resetTime = 2f;
     private float dropTime;
     private float numBlocksToDrop;
     private float powerupMinimumResetTime = 20f;
     private float powerupResetTimeUncertainty = 10f;
+    private float minSecondsToDrop;
+    private float minDropTime;
 
     void Awake()
     {
         blocks = new List<GameObject>();
         fallenBlocks = new List<Vector3>();
-        secondsBetweenDrop = 2f;
-        dropTime = 2f;
+        secondsBetweenDrop = 1f;
+        dropTime = 1.5f;
         numBlocksToDrop = 1;
+        minSecondsToDrop = 0.2f;
+        minDropTime = 0.5f;
         continueCoroutine = true;
         screenTransition = GameObject.Find("CrossFadePanel").GetComponent<Animator>();
         round = 0;
@@ -68,7 +71,8 @@ public class FloorController : MonoBehaviour
 
         Vector3 playerPos = new Vector3(Player.GetComponent<PlayerController>().GetXPosition(), Player.GetComponent<PlayerController>().GetZPosition());
 
-        while (Vector3.Distance(blocks[indexForResetButton].transform.position, playerPos) <= 5f)
+        while (Mathf.Abs(blocks[indexForResetButton].transform.position.x - playerPos.x) < floorSize - 1 ||
+            Mathf.Abs(blocks[indexForResetButton].transform.position.z - playerPos.z) < floorSize - 1)
         {
             indexForResetButton = Random.Range(0, blocks.Count - 1);
         }
@@ -161,7 +165,7 @@ public class FloorController : MonoBehaviour
         foreach (Vector3 position in fallenBlocks)
         {
             GameObject block = CreateBlock(position);
-            StartCoroutine(LowerBlock(block, position, new Vector3(position.x, 0, position.z), resetTime));
+            StartCoroutine(LowerBlock(block, position, new Vector3(position.x, 0, position.z), dropTime));
         }
     }
     public void PlaceBlockAtPosition(Vector3 position)
@@ -218,7 +222,7 @@ public class FloorController : MonoBehaviour
         ResetFloor();
         fallenBlocks.Clear();
         CheckLevelProgression();
-        Invoke("DelayedResetParams", resetTime);
+        Invoke("DelayedResetParams", dropTime + 0.25f);
     }
 
     private void DelayedResetParams()
@@ -245,10 +249,10 @@ public class FloorController : MonoBehaviour
             Rigidbody rb = child.gameObject.GetComponent<Rigidbody>();
             rb.constraints = RigidbodyConstraints.None;
             rb.useGravity = true;
-            rb.AddExplosionForce(12f, Random.insideUnitSphere, 5f, 1.2f);
+            rb.AddExplosionForce(12f, Random.insideUnitSphere, 5f, 1f);
         }
 
-        Invoke("DestroyBlocks", 4f);
+        Invoke("DestroyBlocks", 3f);
         StartCoroutine(SwitchToGameOver());
     }
 
@@ -261,26 +265,30 @@ public class FloorController : MonoBehaviour
     }
     private IEnumerator SwitchToGameOver() {
         screenTransition.SetTrigger("gameOver");
-        yield return new WaitForSecondsRealtime(5f);
+        yield return new WaitForSecondsRealtime(3f);
         SceneManager.LoadScene("GameOver");
         yield return false;
     }
 
     private void CheckLevelProgression()
     {
-        if (secondsBetweenDrop > 0.2f)
+        if (secondsBetweenDrop > minSecondsToDrop)
         {
             secondsBetweenDrop -= 0.1f;
         }
 
-        if (round >= 8 && round % 4 == 0 && dropTime > 0.5f)
+        if (round >= 3 && round % 3 == 0 && dropTime > minDropTime)
         {
             dropTime -= 0.2f;
+            secondsBetweenDrop += 0.1f;
         }
 
-        if (round >= 20 && round % 20 == 0 && round <= 40)
+        
+        if (round >= 10 && round % 10 == 0 && round <= 40)
         {
             numBlocksToDrop++;
+            dropTime = minDropTime + 0.4f;
+            secondsBetweenDrop = minDropTime + 0.5f;
             DropBlocksCoroutine();
         }
     }

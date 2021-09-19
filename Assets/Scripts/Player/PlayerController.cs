@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private float gravity;
     private bool coroutineStarted;
     private bool movementAllowed;
+    private bool rightStep;
     private SkyController skyController;
 
     // Start is called before the first frame update
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour
         floorController = FindObjectOfType<FloorController>();
         skyController = FindObjectOfType<SkyController>();
         gravity = 0.0f;
+        rightStep = true;
         coroutineStarted = false;
         movementAllowed = true;
         transform.position = Vector3.up;
@@ -108,6 +110,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(movement);
             if (anim.gameObject.activeSelf)
             {
+                anim.SetBool("RightStep", !rightStep);
                 anim.SetTrigger("StepTrigger");
             }
             StartCoroutine(MovePlayer(transform.position, newPosition, 0.3f));
