@@ -26,9 +26,12 @@ public class FloorController : MonoBehaviour
     private float secondsBetweenDrop;
     private bool continueCoroutine;
     private GameObject buttonBlock;
+    private int round;
 
     private float verticalDisplacement = 10f;
     private float resetTime = 2f;
+    private float dropTime;
+    private float numBlocksToDrop;
     private float powerupMinimumResetTime = 20f;
     private float powerupResetTimeUncertainty = 10f;
 
@@ -36,9 +39,12 @@ public class FloorController : MonoBehaviour
     {
         blocks = new List<GameObject>();
         fallenBlocks = new List<Vector3>();
-        secondsBetweenDrop = 1f;
+        secondsBetweenDrop = 2f;
+        dropTime = 2f;
+        numBlocksToDrop = 1;
         continueCoroutine = true;
         screenTransition = GameObject.Find("CrossFadePanel").GetComponent<Animator>();
+        round = 0;
         SetupBlocks();
         GenerateResetButton();
         DropBlocksCoroutine();
@@ -60,8 +66,9 @@ public class FloorController : MonoBehaviour
     {
         int indexForResetButton = Random.Range(0, blocks.Count - 1);
 
-        while (blocks[indexForResetButton].transform.position.x == Player.GetComponent<PlayerController>().GetXPosition() &&
-            blocks[indexForResetButton].transform.position.z == Player.GetComponent<PlayerController>().GetZPosition())
+        Vector3 playerPos = new Vector3(Player.GetComponent<PlayerController>().GetXPosition(), Player.GetComponent<PlayerController>().GetZPosition());
+
+        while (Vector3.Distance(blocks[indexForResetButton].transform.position, playerPos) <= 5f)
         {
             indexForResetButton = Random.Range(0, blocks.Count - 1);
         }
@@ -69,7 +76,7 @@ public class FloorController : MonoBehaviour
         buttonBlock = blocks[indexForResetButton];
         blocks.Remove(buttonBlock);
         Instantiate(
-            resetButtonPrefab, 
+            resetButtonPrefab,
             new Vector3(buttonBlock.transform.position.x, 0.6f, buttonBlock.transform.position.z),
             Quaternion.identity,
             buttonBlock.transform);
@@ -79,60 +86,72 @@ public class FloorController : MonoBehaviour
     {
         StartCoroutine(DropBlocks());
     }
-    private void PowerupRespawnCoroutine() { // spin lock check for existence of powerup; not the most efficient, but it decouples powerupcontroller and floorcontroller
+    private void PowerupRespawnCoroutine()
+    { // spin lock check for existence of powerup; not the most efficient, but it decouples powerupcontroller and floorcontroller
         StartCoroutine(PowerupRespawn());
     }
-    private IEnumerator PowerupRespawn() {
-        while (true) { 
-            if (!FindObjectOfType<PowerupController>()) {
+    private IEnumerator PowerupRespawn()
+    {
+        while (true)
+        {
+            if (!FindObjectOfType<PowerupController>())
+            {
                 yield return new WaitForSeconds(Random.Range(powerupMinimumResetTime, powerupMinimumResetTime + powerupResetTimeUncertainty));
                 ResetPowerupIfObtained();
             }
             yield return new WaitForSeconds(5);
-        }  
+        }
     }
     private IEnumerator DropBlocks()
     {
-        while(continueCoroutine)
+        while (continueCoroutine)
         {
             yield return new WaitForSeconds(secondsBetweenDrop);
 
-            int indexToDrop = Random.Range(0, blocks.Count - 1);
+            List<int> indicesToDrop = new List<int>();
 
-            while(blocks[indexToDrop].Equals(buttonBlock))
+            for (int i = 0; i < numBlocksToDrop; i++)
             {
-                indexToDrop = Random.Range(0, blocks.Count - 1);
+                int indexToDrop = Random.Range(0, blocks.Count - 1);
+                while (blocks[indexToDrop].Equals(buttonBlock) || indicesToDrop.Contains(indexToDrop))
+                {
+                    indexToDrop = Random.Range(0, blocks.Count - 1);
+                }
+                indicesToDrop.Add(indexToDrop);
             }
 
-            GameObject blockToDrop;
-
-            if (blocks[indexToDrop])
+            foreach (int index in indicesToDrop)
             {
-                blockToDrop = blocks[indexToDrop];
-            }
-            else
-            {
-                continue;
-            }
+                GameObject blockToDrop;
 
-            Vector3 newDropBlockPos = blockToDrop.transform.position + new Vector3(0, verticalDisplacement, 0);
-            if (!fallenBlocks.Contains(newDropBlockPos))
-            {
-                fallenBlocks.Add(newDropBlockPos);
-            }
+                if (blocks[index])
+                {
+                    blockToDrop = blocks[index];
+                }
+                else
+                {
+                    continue;
+                }
 
-            if (blocks.Contains(blockToDrop))
-            {
-                blocks.Remove(blockToDrop);
-            }
+                Vector3 newDropBlockPos = blockToDrop.transform.position + new Vector3(0, verticalDisplacement, 0);
+                if (!fallenBlocks.Contains(newDropBlockPos))
+                {
+                    fallenBlocks.Add(newDropBlockPos);
+                }
 
-            blockToDrop.GetComponent<BlockController>().Drop();
+                if (blocks.Contains(blockToDrop))
+                {
+                    blocks.Remove(blockToDrop);
+                }
 
-            yield return new WaitForSeconds(4f);
+                blockToDrop.GetComponent<BlockController>().Drop(dropTime);
+                /*
+                yield return new WaitForSeconds(4f);
 
-            if (blockToDrop)
-            {
-                Destroy(blockToDrop);
+                if (blockToDrop)
+                {
+                    Destroy(blockToDrop);
+                }*/
             }
         }
     }
@@ -145,7 +164,8 @@ public class FloorController : MonoBehaviour
             StartCoroutine(LowerBlock(block, position, new Vector3(position.x, 0, position.z), resetTime));
         }
     }
-    public void PlaceBlockAtPosition(Vector3 position) {
+    public void PlaceBlockAtPosition(Vector3 position)
+    {
         GameObject block = CreateBlock(position);
         block.transform.parent = this.transform;
         fallenBlocks.Remove(new Vector3(position.x, verticalDisplacement, position.z));
@@ -157,8 +177,10 @@ public class FloorController : MonoBehaviour
         blocks.Add(block);
         return block;
     }
-    private void ResetPowerupIfObtained() {
-        if (!FindObjectOfType<PowerupController>()) {
+    private void ResetPowerupIfObtained()
+    {
+        if (!FindObjectOfType<PowerupController>())
+        {
             Vector3 randomPosition = new Vector3(Random.Range(-floorSize + 1, floorSize - 1), 1, Random.Range(-floorSize + 1, floorSize - 1));
             GameObject powerup = Instantiate(powerupPrefab, randomPosition, Quaternion.Euler(0, 45, 45));
         }
@@ -185,7 +207,6 @@ public class FloorController : MonoBehaviour
     {
         continueCoroutine = false;
 
-        int round = int.Parse(roundText.text);
         roundText.text = (++round).ToString();
 
         foreach (Transform child in buttonBlock.transform)
@@ -196,6 +217,7 @@ public class FloorController : MonoBehaviour
 
         ResetFloor();
         fallenBlocks.Clear();
+        CheckLevelProgression();
         Invoke("DelayedResetParams", resetTime);
     }
 
@@ -212,7 +234,7 @@ public class FloorController : MonoBehaviour
         continueCoroutine = false;
 
         Score.currentScore = int.Parse(roundText.text);
-        
+
         if (Score.currentScore > Score.highScore)
         {
             Score.highScore = Score.currentScore;
@@ -239,8 +261,27 @@ public class FloorController : MonoBehaviour
     }
     private IEnumerator SwitchToGameOver() {
         screenTransition.SetTrigger("gameOver");
-        yield return new WaitForSecondsRealtime(3f);
+        yield return new WaitForSecondsRealtime(5f);
         SceneManager.LoadScene("GameOver");
         yield return false;
+    }
+
+    private void CheckLevelProgression()
+    {
+        if (secondsBetweenDrop > 0.2f)
+        {
+            secondsBetweenDrop -= 0.1f;
+        }
+
+        if (round >= 8 && round % 4 == 0 && dropTime > 0.5f)
+        {
+            dropTime -= 0.2f;
+        }
+
+        if (round >= 20 && round % 20 == 0 && round <= 40)
+        {
+            numBlocksToDrop++;
+            DropBlocksCoroutine();
+        }
     }
 }

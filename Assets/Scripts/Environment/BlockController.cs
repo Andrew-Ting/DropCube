@@ -13,12 +13,20 @@ public class BlockController : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    public void Drop()
+    private void Update()
+    {
+        if (transform.position.y <= -10f)
+        {
+            Destroy(transform.gameObject);
+        }
+    }
+
+    public void Drop(float dropTime)
     {
         if (transform.gameObject)
         {
             anim.SetTrigger("BlockFallTrigger");
-            Invoke("RigidBodyDrop", 2f);
+            Invoke("RigidBodyDrop", dropTime);
         }
     }
 
