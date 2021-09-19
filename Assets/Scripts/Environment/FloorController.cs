@@ -23,7 +23,8 @@ public class FloorController : MonoBehaviour
 
     private float verticalDisplacement = 10f;
     private float resetTime = 2f;
-
+    private float powerupMinimumResetTime = 20f;
+    private float powerupResetTimeUncertainty = 10f;
     void Awake()
     {
         blocks = new List<GameObject>();
@@ -33,6 +34,7 @@ public class FloorController : MonoBehaviour
         SetupBlocks();
         GenerateResetButton();
         DropBlocksCoroutine();
+        PowerupRespawnCoroutine();
     }
 
     private void SetupBlocks()
@@ -69,7 +71,18 @@ public class FloorController : MonoBehaviour
     {
         StartCoroutine(DropBlocks());
     }
-
+    private void PowerupRespawnCoroutine() { // spin lock check for existence of powerup; not the most efficient, but it decouples powerupcontroller and floorcontroller
+        StartCoroutine(PowerupRespawn());
+    }
+    private IEnumerator PowerupRespawn() {
+        while (true) { 
+            if (!FindObjectOfType<PowerupController>()) {
+                yield return new WaitForSeconds(Random.Range(powerupMinimumResetTime, powerupMinimumResetTime + powerupResetTimeUncertainty));
+                ResetPowerupIfObtained();
+            }
+            yield return new WaitForSeconds(5);
+        }  
+    }
     private IEnumerator DropBlocks()
     {
         while(continueCoroutine)
@@ -171,7 +184,6 @@ public class FloorController : MonoBehaviour
 
         ResetFloor();
         fallenBlocks.Clear();
-        ResetPowerupIfObtained();
         Invoke("DelayedResetParams", resetTime);
     }
 
