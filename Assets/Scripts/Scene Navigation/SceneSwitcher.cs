@@ -9,6 +9,7 @@ public class SceneSwitcher : MonoBehaviour
 {
     private enum SceneType {
         MainMenu,
+        LoadLevel,
         GameplayScene,
         GameOver
     };
