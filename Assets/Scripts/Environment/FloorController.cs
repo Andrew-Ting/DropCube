@@ -28,6 +28,7 @@ public class FloorController : MonoBehaviour
     private float resetTime = 2f;
     private float powerupMinimumResetTime = 20f;
     private float powerupResetTimeUncertainty = 10f;
+
     void Awake()
     {
         blocks = new List<GameObject>();
@@ -218,7 +219,7 @@ public class FloorController : MonoBehaviour
             Rigidbody rb = child.gameObject.GetComponent<Rigidbody>();
             rb.constraints = RigidbodyConstraints.None;
             rb.useGravity = true;
-            rb.AddExplosionForce(12f, Random.insideUnitSphere, 5f, 2f);
+            rb.AddExplosionForce(12f, Random.insideUnitSphere, 5f, 1.2f);
         }
 
         Invoke("DestroyBlocks", 4f);
